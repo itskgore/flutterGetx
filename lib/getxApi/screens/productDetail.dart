@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterGet/getxApi/controller/productContro.dart';
+import 'package:flutterGet/getxApi/model/productModel.dart';
+import 'package:flutterGet/getxApi/widgets/imageWidget.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
 
@@ -54,7 +56,7 @@ class ProductDetails extends StatelessWidget {
                 child: Column(
                   children: [
                     Hero(
-                      tag: productData.name,
+                      tag: productData.id,
                       child: ShaderMask(
                         shaderCallback: (rect) {
                           return LinearGradient(
@@ -72,14 +74,7 @@ class ProductDetails extends StatelessWidget {
                         child: Container(
                           width: double.infinity,
                           height: media.height * 0.30,
-                          child: CachedNetworkImage(
-                            fit: BoxFit.cover,
-                            imageUrl: productData.imageLink,
-                            placeholder: (context, url) => Image.network(
-                                "https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png"),
-                            errorWidget: (context, url, error) => Image.network(
-                                "https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png"),
-                          ),
+                          child: ImageWidget(productData: productData),
                         ),
                       ),
                     ),
@@ -138,9 +133,7 @@ class ProductDetails extends StatelessWidget {
                                   }),
                             ],
                           ),
-                          SizedBox(
-                            height: media.height * 0.02,
-                          ),
+                          buildSizedBox(media, 0.02),
                           Text(
                             productData.name,
                             style: TextStyle(
@@ -157,9 +150,7 @@ class ProductDetails extends StatelessWidget {
                                 height: 1.5,
                                 wordSpacing: 2),
                           ),
-                          SizedBox(
-                            height: media.height * 0.01,
-                          ),
+                          buildSizedBox(media, 0.02),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -204,14 +195,18 @@ class ProductDetails extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(
-                            height: media.height * 0.01,
-                          ),
+                          buildSizedBox(media, 0.01),
                           Container(
                             width: double.infinity,
                             height: media.height * 0.05,
                             child: OutlinedButton(
-                              child: Text('${productData.productLink}'),
+                              child: Expanded(
+                                child: Text(
+                                  '${productData.productLink}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
                               style: OutlinedButton.styleFrom(
                                 primary: Colors.white,
                                 backgroundColor: Colors.teal[700],
@@ -220,7 +215,8 @@ class ProductDetails extends StatelessWidget {
                               ),
                               onPressed: () {},
                             ),
-                          )
+                          ),
+                          buildSizedBox(media, 0.02),
                         ],
                       ),
                     ),
@@ -229,6 +225,12 @@ class ProductDetails extends StatelessWidget {
               ),
             );
           }),
+    );
+  }
+
+  SizedBox buildSizedBox(Size media, double height) {
+    return SizedBox(
+      height: media.height * height,
     );
   }
 }
